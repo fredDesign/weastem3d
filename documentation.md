@@ -165,7 +165,6 @@ Module dédié au rendu flat design avec hooks et composants spécialisés.
 **Hooks disponibles :**
 - `useFlatDesignMaterial` : Création matériaux adaptatifs
 - `useFlatDesignLighting` : Configuration éclairage
-- `useFlatDesignFog` : Gestion brouillard
 - `useFlatDesignToggle` : Utilitaire toggle
 
 ### 📜 ScrollCameraController

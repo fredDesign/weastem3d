@@ -1,6 +1,5 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
-import { createFog } from './ThreeCore';
 
 /**
  * Flat Design Renderer Module
@@ -33,7 +32,7 @@ export const DEFAULT_FLAT_DESIGN_CONFIG: FlatDesignConfig = {
  * Remplace l'éclairage complexe par un éclairage uniforme
  */
 export const useFlatDesignLighting = (config: FlatDesignConfig) => {
-  const lightingConfig = useRef({
+  const lightingConfig = useMemo(() => ({
     ambient: {
       intensity: config.enableFlatDesign ? config.flatAmbientIntensity : 0.4,
       color: '#ffffff'
@@ -48,33 +47,13 @@ export const useFlatDesignLighting = (config: FlatDesignConfig) => {
       { intensity: 0.4, position: [8, -3, 5] as [number, number, number], color: '#60a5fa' },
       { intensity: 0.3, position: [-8, 3, -5] as [number, number, number], color: '#f8fafc' }
     ]
-  });
+  }), [config.enableFlatDesign, config.flatAmbientIntensity]);
 
   useEffect(() => {
-    console.log('💡 Flat design lighting mode:', config.enableFlatDesign ? 'FLAT' : '3D');
+    // console.log('💡 Flat design lighting mode:', config.enableFlatDesign ? 'FLAT' : '3D');
   }, [config.enableFlatDesign]);
 
-  return lightingConfig.current;
-};
-
-/**
- * Hook pour configurer le brouillard (fog) selon le mode
- */
-export const useFlatDesignFog = (config: FlatDesignConfig) => {
-  const { scene } = useThree();
-
-  useEffect(() => {
-    if (!scene) return;
-
-    if (config.enableFlatDesign && config.removeFog) {
-      console.log('🌫️ Removing fog for flat design mode');
-      scene.fog = null;
-    } else {
-      console.log('🌫️ Adding fog for 3D depth effect');
-      // Utilise le module centralisé pour créer le fog
-      scene.fog = createFog(0xf1f5f9, 12, 30);
-    }
-  }, [scene, config.enableFlatDesign, config.removeFog]);
+  return lightingConfig;
 };
 
 /**
@@ -135,7 +114,7 @@ export const useFlatDesignToggle = (initialState: boolean = false) => {
   const toggleFlatDesign = () => {
     setEnableFlatDesign(prev => {
       const newValue = !prev;
-      console.log('🎨 Flat design mode toggled:', newValue ? 'ENABLED' : 'DISABLED');
+      // console.log('🎨 Flat design mode toggled:', newValue ? 'ENABLED' : 'DISABLED');
       return newValue;
     });
   };
@@ -147,9 +126,9 @@ export const useFlatDesignToggle = (initialState: boolean = false) => {
   };
 };
 
+
 export default {
   useFlatDesignLighting,
-  useFlatDesignFog,
   FlatDesignLights,
   useFlatDesignToggle,
   DEFAULT_FLAT_DESIGN_CONFIG
