@@ -2,7 +2,7 @@ import NetworkVisualization from "./components/NetworkVisualization";
 import ScrollCameraController from "./components/ScrollCameraController";
 import NetworkTestLoader from "./components/NetworkTestLoader";
 import { networkDataService, NetworkConfiguration } from "./components/NetworkDataService";
-import exampleImage from "figma:asset/f9dca23d5e7b62a7880e2d3015ae0bd68c4fd4f6.png";
+import exampleImage from "/images/default.png";
 
 import { useState, useEffect } from 'react';
 
