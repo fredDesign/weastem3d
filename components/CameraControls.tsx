@@ -18,9 +18,12 @@ export const DEFAULT_CAMERA_CONTROLS: CameraControls = {
   rotation: [0, 0, 0],
 };
 
-// Function to parse data attributes from document body
+// Function to parse data attributes from the active network visualization container
 export const parseDataAttributes = (): CameraControls => {
-  const element = document.body;
+  // Chercher spécifiquement le conteneur avec l'attribut data-main-visualization
+  // Cela permet de cibler avec précision la visualisation principale
+  const container = document.querySelector('.network-visualization-container[data-main-visualization="true"]') as HTMLElement;
+  const element = container || document.body;
   
   // Parse data attributes with fallback to defaults
   const zoom = parseFloat(element.dataset.cameraZoom || '1');
@@ -188,8 +191,12 @@ export const useCameraControls = () => {
       }
     });
 
+    // Get the specific container element with data-main-visualization attribute
+    const container = document.querySelector('.network-visualization-container[data-main-visualization="true"]') as HTMLElement;
+    const elementToObserve = container || document.body;
+
     // Start observing
-    observer.observe(document.body, {
+    observer.observe(elementToObserve, {
       attributes: true,
       attributeFilter: [
         'data-camera-zoom',

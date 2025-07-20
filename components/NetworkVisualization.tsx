@@ -499,11 +499,8 @@ const NetworkVisualization: React.FC = () => {
   }, [viewport]);
 
   return (
-    <div id="network-visualization-container" className="fixed inset-0 w-full h-full -z-10">
-      <div id="network-background-gradient" className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 opacity-80"></div>
-
       <Canvas
-        id="network-3d-canvas"
+        className="network-3d-canvas"
         camera={cameraSettings}
         style={{ background: "transparent", width: "100%", height: "100%" }}
         dpr={[1, 2]}
@@ -521,7 +518,6 @@ const NetworkVisualization: React.FC = () => {
           networkConfig={networkConfig}
         />
       </Canvas>
-    </div>
   );
 };
 

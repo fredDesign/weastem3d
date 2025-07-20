@@ -27,13 +27,16 @@ export default function App() {
     position: [number, number, number],
     target: [number, number, number] = [0, 0, 0]
   ) => {
-    document.body.dataset.cameraZoom = zoom.toString();
-    document.body.dataset.cameraPositionX = position[0].toString();
-    document.body.dataset.cameraPositionY = position[1].toString();
-    document.body.dataset.cameraPositionZ = position[2].toString();
-    document.body.dataset.cameraTargetX = target[0].toString();
-    document.body.dataset.cameraTargetY = target[1].toString();
-    document.body.dataset.cameraTargetZ = target[2].toString();
+    const container = document.querySelector('.network-visualization-container[data-main-visualization="true"]') as HTMLElement;
+    const element = container || document.body;
+    
+    element.dataset.cameraZoom = zoom.toString();
+    element.dataset.cameraPositionX = position[0].toString();
+    element.dataset.cameraPositionY = position[1].toString();
+    element.dataset.cameraPositionZ = position[2].toString();
+    element.dataset.cameraTargetX = target[0].toString();
+    element.dataset.cameraTargetY = target[1].toString();
+    element.dataset.cameraTargetZ = target[2].toString();
   };
 
   // Initialize with default camera position
@@ -55,7 +58,10 @@ export default function App() {
 
       {/* Fixed 3D Network Background - flat design, no rotation, with animations */}
       <div id="network-background">
-        <NetworkVisualization />
+        <div className="network-visualization-container fixed inset-0 w-full h-full -z-10" data-main-visualization="true">
+          <div id="network-background-gradient" className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 opacity-80"></div>
+          <NetworkVisualization />
+        </div>
       </div>
 
       {/* Main Content */}

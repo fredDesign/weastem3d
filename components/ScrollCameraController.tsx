@@ -83,39 +83,41 @@ const parseScrollSettings = (element: Element): ScrollSettings => {
   return settings;
 };
 
-// Function to apply camera settings to body data-attributes
+// Function to apply camera settings to the visualization container's data-attributes
 const applyCameraSettings = (settings: CameraSettings) => {
-  const body = document.body;
+  // Target the specific container with data-main-visualization="true" attribute
+  const container = document.querySelector('.network-visualization-container[data-main-visualization="true"]') as HTMLElement;
+  const element = container || document.body;
   
   if (settings.zoom !== undefined) {
-    body.dataset.cameraZoom = settings.zoom.toString();
+    element.dataset.cameraZoom = settings.zoom.toString();
   }
   if (settings.positionX !== undefined) {
-    body.dataset.cameraPositionX = settings.positionX.toString();
+    element.dataset.cameraPositionX = settings.positionX.toString();
   }
   if (settings.positionY !== undefined) {
-    body.dataset.cameraPositionY = settings.positionY.toString();
+    element.dataset.cameraPositionY = settings.positionY.toString();
   }
   if (settings.positionZ !== undefined) {
-    body.dataset.cameraPositionZ = settings.positionZ.toString();
+    element.dataset.cameraPositionZ = settings.positionZ.toString();
   }
   if (settings.targetX !== undefined) {
-    body.dataset.cameraTargetX = settings.targetX.toString();
+    element.dataset.cameraTargetX = settings.targetX.toString();
   }
   if (settings.targetY !== undefined) {
-    body.dataset.cameraTargetY = settings.targetY.toString();
+    element.dataset.cameraTargetY = settings.targetY.toString();
   }
   if (settings.targetZ !== undefined) {
-    body.dataset.cameraTargetZ = settings.targetZ.toString();
+    element.dataset.cameraTargetZ = settings.targetZ.toString();
   }
   if (settings.rotationX !== undefined) {
-    body.dataset.cameraRotationX = settings.rotationX.toString();
+    element.dataset.cameraRotationX = settings.rotationX.toString();
   }
   if (settings.rotationY !== undefined) {
-    body.dataset.cameraRotationY = settings.rotationY.toString();
+    element.dataset.cameraRotationY = settings.rotationY.toString();
   }
   if (settings.rotationZ !== undefined) {
-    body.dataset.cameraRotationZ = settings.rotationZ.toString();
+    element.dataset.cameraRotationZ = settings.rotationZ.toString();
   }
 };
 
@@ -141,7 +143,7 @@ export const useScrollCameraController = (
 ) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const retryTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!enabled || typeof window === 'undefined') {

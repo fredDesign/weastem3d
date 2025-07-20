@@ -1,0 +1,92 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "name": "Simple Network",
+    "description": "Configuration simple avec 5 nœuds",
+    "createdAt": "2025-07-18T09:47:54.074Z",
+    "modifiedAt": "2025-07-18T10:01:14.542Z"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "radius": 0.5,
+      "color": "#0E48A9",
+      "connections": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 1,
+      "position": [
+        -2,
+        1,
+        0
+      ],
+      "radius": 0.4,
+      "color": "#0E48A9",
+      "connections": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": 2,
+      "position": [
+        2,
+        1,
+        0
+      ],
+      "radius": 0.5,
+      "color": "#f47a0a",
+      "connections": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": 3,
+      "position": [
+        -3,
+        -1,
+        1
+      ],
+      "radius": 0.3,
+      "color": "#f97316",
+      "connections": [
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "position": [
+        3.8,
+        1.5,
+        2
+      ],
+      "radius": 0.3,
+      "color": "#0E48A9",
+      "connections": [
+        2
+      ]
+    },
+    {
+      "id": 5,
+      "position": [
+        -5,
+        0,
+        1
+      ],
+      "radius": 0.25,
+      "color": "#0E48A9",
+      "connections": [
+        3
+      ]
+    }
+  ]
+}
