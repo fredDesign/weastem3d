@@ -41,7 +41,7 @@ export default function App() {
 
   // Initialize with default camera position
   useEffect(() => {
-    setCameraControls(1, [0, 0.5, 10], [0, 0, 0]);
+    setCameraControls(1, [0, 0.5, 30], [0, 0, 0]);
   }, []);
 
   return (
@@ -75,17 +75,17 @@ export default function App() {
           data-scroll-end="bottom center"
           data-scroll-markers="false"
           data-on-enter-zoom="1"
-          data-on-enter-position-x="0"
+          data-on-enter-position-x="5"
           data-on-enter-position-y="0.5"
-          data-on-enter-position-z="10"
-          data-on-enter-target-x="0"
+          data-on-enter-position-z="30"
+          data-on-enter-target-x="5"
           data-on-enter-target-y="0"
           data-on-enter-target-z="0"
           data-on-enter-back-zoom="1"
-          data-on-enter-back-position-x="0"
+          data-on-enter-back-position-x="5"
           data-on-enter-back-position-y="0.5"
-          data-on-enter-back-position-z="10"
-          data-on-enter-back-target-x="0"
+          data-on-enter-back-position-z="30"
+          data-on-enter-back-target-x="5"
           data-on-enter-back-target-y="0"
           data-on-enter-back-target-z="0"
         >
@@ -107,7 +107,7 @@ export default function App() {
               </p>
               <div id="hero-actions" className="flex justify-center gap-4">
                 <button 
-                  onClick={() => setCameraControls(1.5, [20, 5, 20], [0, 0, 0])}
+                  onClick={() => setCameraControls(1, [20, 5, 20], [0, 0, 0])}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Zoom In View
@@ -131,17 +131,17 @@ export default function App() {
           data-scroll-start="top 80%"
           data-scroll-end="bottom 20%"
           data-scroll-markers="false"
-          data-on-enter-zoom="1.5"
+          data-on-enter-zoom="1"
           data-on-enter-position-x="5"
           data-on-enter-position-y="2"
-          data-on-enter-position-z="8"
+          data-on-enter-position-z="20"
           data-on-enter-target-x="0"
           data-on-enter-target-y="0"
           data-on-enter-target-z="0"
           data-on-leave-zoom="1"
           data-on-leave-position-x="0"
           data-on-leave-position-y="0.5"
-          data-on-leave-position-z="10"
+          data-on-leave-position-z="30"
         >
           <div id="about-container" className="max-w-6xl mx-auto p-8">
             <div id="about-content" className="rounded-2xl p-12">
@@ -213,17 +213,17 @@ export default function App() {
           data-scroll-start="top 80%"
           data-scroll-end="bottom 20%"
           data-scroll-markers="false"
-          data-on-enter-zoom="2"
+          data-on-enter-zoom="1"
           data-on-enter-position-x="12"
           data-on-enter-position-y="3"
-          data-on-enter-position-z="0"
+          data-on-enter-position-z="10"
           data-on-enter-target-x="0"
           data-on-enter-target-y="0"
           data-on-enter-target-z="0"
-          data-on-leave-zoom="1.5"
+          data-on-leave-zoom="1"
           data-on-leave-position-x="5"
           data-on-leave-position-y="2"
-          data-on-leave-position-z="8"
+          data-on-leave-position-z="20"
         >
           <div className="max-w-6xl mx-auto p-8">
             <div className="rounded-2xl p-12">
@@ -283,17 +283,17 @@ export default function App() {
           data-scroll-start="top 80%"
           data-scroll-end="bottom 20%"
           data-scroll-markers="false"
-          data-on-enter-zoom="1.8"
+          data-on-enter-zoom="1"
           data-on-enter-position-x="0"
           data-on-enter-position-y="18"
           data-on-enter-position-z="0"
           data-on-enter-target-x="0"
           data-on-enter-target-y="0"
           data-on-enter-target-z="0"
-          data-on-leave-zoom="2"
+          data-on-leave-zoom="1"
           data-on-leave-position-x="12"
           data-on-leave-position-y="3"
-          data-on-leave-position-z="0"
+          data-on-leave-position-z="30"
         >
           <div className="max-w-4xl mx-auto p-8">
             <div className="rounded-2xl p-12 text-center">
@@ -344,13 +344,13 @@ export default function App() {
 
               <div className="flex justify-center gap-4 mb-8">
                 <button 
-                  onClick={() => setCameraControls(2, [5, 15, 5], [0, 0, 0])}
+                  onClick={() => setCameraControls(1, [5, 15, 5], [0, 0, 0])}
                   className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Top View
                 </button>
                 <button 
-                  onClick={() => setCameraControls(0.8, [25, 2, 25], [0, 0, 0])}
+                  onClick={() => setCameraControls(1, [25, 2, 25], [0, 0, 0])}
                   className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Wide View

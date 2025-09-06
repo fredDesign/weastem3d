@@ -356,7 +356,7 @@ export const useApplyCameraControls = (
 
     // Apply zoom through FOV adjustment
     if ("fov" in camera) {
-      const baseFov = isMobile ? 65 : 50;
+      const baseFov = isMobile ? 65 : 20;
       const zoomFovFactor = Math.max(0.3, 1 / controls.zoom);
       camera.fov = baseFov * zoomFovFactor;
       camera.updateProjectionMatrix();

@@ -21,7 +21,30 @@ const FLAT_MATERIAL_PROPERTIES = {
   fog: false,
 } as const;
 
-// Optimized network node component
+// Calcul adaptatif du niveau de détail (LOD) en fonction de la taille et la distance
+const calculateAdaptiveDetail = (radius: number, distanceToCamera: number): [number, number] => {
+  // Base segments (minimum quality)
+  const minSegments = 8;
+  const maxSegments = 32;
+  
+  // Calculer l'importance visuelle (taille apparente = radius/distance)
+  const visualImportance = radius / Math.max(distanceToCamera, 0.1);
+  
+  // Calculer les segments en fonction de l'importance visuelle
+  // Plus le noeud est visuellement important, plus la qualité est élevée
+  const adaptiveSegments = Math.max(
+    minSegments,
+    Math.min(maxSegments, Math.round(minSegments + (maxSegments - minSegments) * visualImportance * 10))
+  );
+  
+  // Pour les petits nodes lointains, réduire davantage
+  const widthSegments = adaptiveSegments;
+  const heightSegments = adaptiveSegments;
+  
+  return [widthSegments, heightSegments];
+};
+
+// Optimized network node component with adaptive geometry
 const NetworkNodeComponent: React.FC<{
   node: NetworkNode;
   animationData: NodeAnimationData;
@@ -29,6 +52,7 @@ const NetworkNodeComponent: React.FC<{
   onAnimationComplete: (id: number) => void;
 }> = ({ node, animationData, onPositionUpdate, onAnimationComplete }) => {
   const meshRef = useRef<any>(null);
+  const { camera } = useThree();
   
   // Generate sinusoidal parameters once per node
   const sinusoidalParams = useRef<SinusoidalParams>(generateSinusoidalParams());
@@ -50,6 +74,20 @@ const NetworkNodeComponent: React.FC<{
     onPositionUpdate,
     node.id
   );
+  
+  // Calculer la distance à la caméra (mis à jour dans useFrame)
+  const distanceToCamera = useRef(0);
+  useFrame(() => {
+    if (meshRef.current) {
+      // Calculer la distance à la caméra
+      distanceToCamera.current = meshRef.current.position.distanceTo(camera.position);
+    }
+  });
+  
+  // Calculer la géométrie adaptative en fonction de la taille et de la distance
+  const [widthSegments, heightSegments] = useMemo(() => {
+    return calculateAdaptiveDetail(node.radius, 10); // Distance initiale (sera mise à jour)
+  }, [node.radius]);
 
   return (
     <mesh
@@ -57,7 +95,7 @@ const NetworkNodeComponent: React.FC<{
       position={basePosition}
       userData={{ id: `network-node-${node.id}`, nodeId: node.id, color: node.color }}
     >
-      <sphereGeometry args={[node.radius, 32, 32]} />
+      <sphereGeometry args={[node.radius, widthSegments, heightSegments]} />
       <meshBasicMaterial 
         color={node.color}
         {...FLAT_MATERIAL_PROPERTIES}
@@ -154,11 +192,11 @@ const InstancedConnectionLines: React.FC<{
       args={[null, null, Math.max(connections.length, 1)]}
       userData={{ id: 'network-connection-lines', type: 'connections' }}
     >
-      <cylinderGeometry args={[0.0375, 0.0375, 1, 8]} />
+      <cylinderGeometry args={[0.05, 0.05, 1, 8]} />
       <meshBasicMaterial 
-        color="#0D49AB"
+        color="#134d9c"
         transparent={true}
-        opacity={0.8}
+        opacity={1}
         fog={false}
       />
     </instancedMesh>
@@ -401,7 +439,6 @@ const ResponsiveScene: React.FC<{
 
   return (
     <>
-      <ambientLight intensity={1.0} color="#ffffff" />
 
       <group>
         {allNodesToRender.map((node) => {
@@ -497,20 +534,49 @@ const NetworkVisualization: React.FC = () => {
       return { position: [0, 0.5, 10] as Vector3Tuple, fov: 50, near: 0.1, far: 100 };
     }
   }, [viewport]);
+  
+  // Ajustement dynamique du pixelRatio en fonction de l'appareil et des performances
+  const dynamicDpr = useMemo(() => {
+    const isMobile = viewport.width < 768;
+    const isTablet = viewport.width < 1024 && viewport.width >= 768;
+    
+    // Sur les appareils mobiles, réduire drastiquement pour les performances
+    if (isMobile) {
+      return [0.5, 1] as [number, number]; // Min et max plus bas
+    } 
+    // Sur les tablettes, une valeur intermédiaire
+    else if (isTablet) {
+      return [0.75, 1.5] as [number, number]; // Min et max intermédiaires
+    } 
+    // Sur desktop, qualité standard à élevée
+    else {
+      return [1, 2] as [number, number]; // Full resolution sur les écrans standards, 2x sur les écrans haute densité
+    }
+  }, [viewport]);
+  
+  // Configuration du GL basée sur le type d'appareil
+  const glConfig = useMemo(() => {
+    const isMobile = viewport.width < 768;
+    
+    return {
+      antialias: !isMobile, // Désactiver l'antialiasing sur mobile pour améliorer les performances
+      alpha: true,
+      powerPreference: "high-performance",
+      preserveDrawingBuffer: false,
+    };
+  }, [viewport]);
 
   return (
       <Canvas
         className="network-3d-canvas"
         camera={cameraSettings}
         style={{ background: "transparent", width: "100%", height: "100%" }}
-        dpr={[1, 2]}
-        performance={{ min: 0.5 }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-          preserveDrawingBuffer: false,
+        dpr={dynamicDpr}
+        performance={{ 
+          min: 0.5,
+          debounce: 200 // Ajout d'un debounce pour éviter les changements trop fréquents
         }}
+        gl={glConfig}
       >
         <ResponsiveScene
           viewport={viewport}

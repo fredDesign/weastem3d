@@ -36,17 +36,7 @@ export const useFlatDesignLighting = (config: FlatDesignConfig) => {
     ambient: {
       intensity: config.enableFlatDesign ? config.flatAmbientIntensity : 0.4,
       color: '#ffffff'
-    },
-    directional: config.enableFlatDesign ? [] : [
-      { intensity: 5, position: [-2, 2, 3.5] as [number, number, number] },
-      { intensity: 1.2, position: [10, 10, 8] as [number, number, number], color: '#ffffff' },
-      { intensity: 0.6, position: [-5, -5, -5] as [number, number, number], color: '#94a3b8' }
-    ],
-    point: config.enableFlatDesign ? [] : [
-      { intensity: 0.5, position: [0, 5, 10] as [number, number, number], color: '#e2e8f0' },
-      { intensity: 0.4, position: [8, -3, 5] as [number, number, number], color: '#60a5fa' },
-      { intensity: 0.3, position: [-8, 3, -5] as [number, number, number], color: '#f8fafc' }
-    ]
+    }
   }), [config.enableFlatDesign, config.flatAmbientIntensity]);
 
   useEffect(() => {
@@ -62,19 +52,6 @@ export const useFlatDesignLighting = (config: FlatDesignConfig) => {
 export const FlatDesignLights: React.FC<{ config: FlatDesignConfig }> = ({ config }) => {
   const lightingConfig = useFlatDesignLighting(config);
 
-  if (config.enableFlatDesign) {
-    return (
-      <>
-        {/* Éclairage uniforme pour flat design - pas d'ombres */}
-        <ambientLight 
-          intensity={lightingConfig.ambient.intensity} 
-          color={lightingConfig.ambient.color} 
-        />
-        {/* Pas de lumières directionnelles ou ponctuelles en mode flat */}
-      </>
-    );
-  }
-
   return (
     <>
       {/* Éclairage 3D complet avec ombres et relief */}
@@ -83,24 +60,6 @@ export const FlatDesignLights: React.FC<{ config: FlatDesignConfig }> = ({ confi
         color={lightingConfig.ambient.color} 
       />
       
-      {lightingConfig.directional.map((light, index) => (
-        <directionalLight
-          key={`directional-${index}`}
-          intensity={light.intensity}
-          position={light.position}
-          color={light.color}
-          castShadow={false}
-        />
-      ))}
-
-      {lightingConfig.point.map((light, index) => (
-        <pointLight
-          key={`point-${index}`}
-          position={light.position}
-          intensity={light.intensity}
-          color={light.color}
-        />
-      ))}
     </>
   );
 };
