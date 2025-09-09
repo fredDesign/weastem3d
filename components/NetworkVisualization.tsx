@@ -189,7 +189,7 @@ const InstancedConnectionLines: React.FC<{
   return (
     <instancedMesh
       ref={instancedMeshRef}
-      args={[null, null, Math.max(connections.length, 1)]}
+      args={[undefined, undefined, Math.max(connections.length, 1)]}
       userData={{ id: 'network-connection-lines', type: 'connections' }}
     >
       <cylinderGeometry args={[0.05, 0.05, 1, 8]} />

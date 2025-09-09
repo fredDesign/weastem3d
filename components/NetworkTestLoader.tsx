@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { networkDataService, NetworkConfiguration } from './NetworkDataService';
-import { Button } from './ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 // Test configurations for demonstrating animations - fixed format
 const testConfigurations = {
@@ -156,117 +154,124 @@ const NetworkTestLoader: React.FC = () => {
   };
 
   return (
-    <Card className="fixed top-4 left-4 z-50 w-80 bg-white/95 backdrop-blur-sm shadow-xl">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg">Animation Test Loader</CardTitle>
-        <CardDescription>
-          Load different configurations to test JSON state transitions
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            onClick={() => loadConfiguration('default')}
-            disabled={isLoading}
-            variant={currentConfig === 'default' ? 'default' : 'outline'}
-            size="sm"
-          >
-            {isLoading && currentConfig === 'default' ? '⏳' : '🏠'} Default
-          </Button>
-          
-          <Button
-            onClick={() => loadConfiguration('simple')}
-            disabled={isLoading}
-            variant={currentConfig === 'simple' ? 'default' : 'outline'}
-            size="sm"
-          >
-            {isLoading && currentConfig === 'simple' ? '⏳' : '🔹'} Simple
-          </Button>
-          
-          <Button
-            onClick={() => loadConfiguration('expanded')}
-            disabled={isLoading}
-            variant={currentConfig === 'expanded' ? 'default' : 'outline'}
-            size="sm"
-          >
-            {isLoading && currentConfig === 'expanded' ? '⏳' : '📈'} Expanded
-          </Button>
-          
-          <Button
-            onClick={() => loadConfiguration('moved')}
-            disabled={isLoading}
-            variant={currentConfig === 'moved' ? 'default' : 'outline'}
-            size="sm"
-          >
-            {isLoading && currentConfig === 'moved' ? '⏳' : '🔄'} Moved
-          </Button>
-        </div>
-        
-        <Button
-          onClick={() => loadConfiguration('complex')}
-          disabled={isLoading}
-          variant={currentConfig === 'complex' ? 'default' : 'outline'}
-          size="sm"
-          className="w-full"
-        >
-          {isLoading && currentConfig === 'complex' ? '⏳' : '🌐'} Complex Network
-        </Button>
-        
-        <div className="flex gap-2">
-          <Button
-            onClick={exportCurrentConfig}
-            disabled={isLoading}
-            variant="secondary"
-            size="sm"
-            className="flex-1"
-          >
-            💾 Export
-          </Button>
-          
-          <label className="flex-1">
-            <Button
-              disabled={isLoading}
-              variant="secondary"
-              size="sm"
-              className="w-full cursor-pointer"
-              asChild
-            >
-              <span>📁 Import</span>
-            </Button>
-            <input
-              type="file"
-              accept=".json"
-              onChange={loadFromJSON}
-              disabled={isLoading}
-              className="hidden"
-            />
-          </label>
-        </div>
-        
-        {isLoading && (
-          <div className="text-center py-2">
-            <div className="inline-flex items-center gap-2 text-sm text-gray-600">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              Loading configuration...
-            </div>
-          </div>
-        )}
-        
-        <div className="text-xs text-gray-500 pt-2 border-t">
-          <p><strong>Animation Features:</strong></p>
-          <ul className="list-disc list-inside space-y-1 mt-1">
-            <li>📦 Scale: New/removed nodes</li>
-            <li>🔄 Move: Repositioned nodes</li>
-            <li>⚡ Easing: Smooth transitions</li>
-            <li>🔗 Connections: Animated lines</li>
-          </ul>
-          <p className="mt-2 text-xs text-blue-600">
-            Current: <strong>{currentConfig}</strong>
+    <div className="position-fixed top-0 start-0 mt-3 ms-3" style={{ zIndex: 50, width: '320px' }}>
+      <div className="card bg-light bg-opacity-95 shadow-lg">
+        <div className="card-header pb-2">
+          <h5 className="card-title mb-1">Animation Test Loader</h5>
+          <p className="card-text small text-secondary mb-0">
+            Load different configurations to test JSON state transitions
           </p>
         </div>
-      </CardContent>
-    </Card>
+        
+        <div className="card-body">
+          <div className="row g-2 mb-3">
+            <div className="col-6">
+              <button
+                onClick={() => loadConfiguration('default')}
+                disabled={isLoading}
+                className={`btn btn-sm w-100 ${currentConfig === 'default' ? 'btn-primary' : 'btn-outline-primary'}`}
+              >
+                {isLoading && currentConfig === 'default' ? '⏳' : '🏠'} Default
+              </button>
+            </div>
+            
+            <div className="col-6">
+              <button
+                onClick={() => loadConfiguration('simple')}
+                disabled={isLoading}
+                className={`btn btn-sm w-100 ${currentConfig === 'simple' ? 'btn-primary' : 'btn-outline-primary'}`}
+              >
+                {isLoading && currentConfig === 'simple' ? '⏳' : '🔹'} Simple
+              </button>
+            </div>
+            
+            <div className="col-6">
+              <button
+                onClick={() => loadConfiguration('expanded')}
+                disabled={isLoading}
+                className={`btn btn-sm w-100 ${currentConfig === 'expanded' ? 'btn-primary' : 'btn-outline-primary'}`}
+              >
+                {isLoading && currentConfig === 'expanded' ? '⏳' : '📈'} Expanded
+              </button>
+            </div>
+            
+            <div className="col-6">
+              <button
+                onClick={() => loadConfiguration('moved')}
+                disabled={isLoading}
+                className={`btn btn-sm w-100 ${currentConfig === 'moved' ? 'btn-primary' : 'btn-outline-primary'}`}
+              >
+                {isLoading && currentConfig === 'moved' ? '⏳' : '🔄'} Moved
+              </button>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => loadConfiguration('complex')}
+            disabled={isLoading}
+            className={`btn btn-sm w-100 mb-3 ${currentConfig === 'complex' ? 'btn-primary' : 'btn-outline-primary'}`}
+          >
+            {isLoading && currentConfig === 'complex' ? '⏳' : '🌐'} Complex Network
+          </button>
+          
+          <div className="row g-2 mb-3">
+            <div className="col-6">
+              <button
+                onClick={exportCurrentConfig}
+                disabled={isLoading}
+                className="btn btn-secondary btn-sm w-100"
+              >
+                💾 Export
+              </button>
+            </div>
+            
+            <div className="col-6">
+              <label className="w-100">
+                <button
+                  disabled={isLoading}
+                  className="btn btn-secondary btn-sm w-100"
+                  style={{ cursor: 'pointer' }}
+                  type="button"
+                >
+                  📁 Import
+                </button>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={loadFromJSON}
+                  disabled={isLoading}
+                  className="d-none"
+                />
+              </label>
+            </div>
+          </div>
+          
+          {isLoading && (
+            <div className="text-center py-2">
+              <div className="d-inline-flex align-items-center gap-2 small text-secondary">
+                <div className="spinner-border spinner-border-sm text-primary" role="status" style={{ width: '1rem', height: '1rem' }}>
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                Loading configuration...
+              </div>
+            </div>
+          )}
+          
+          <div className="small text-secondary pt-2 border-top">
+            <p className="mb-1"><strong>Animation Features:</strong></p>
+            <ul className="list-unstyled ps-3 mb-2">
+              <li>📦 Scale: New/removed nodes</li>
+              <li>🔄 Move: Repositioned nodes</li>
+              <li>⚡ Easing: Smooth transitions</li>
+              <li>🔗 Connections: Animated lines</li>
+            </ul>
+            <p className="mb-0 small text-info">
+              Current: <strong>{currentConfig}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

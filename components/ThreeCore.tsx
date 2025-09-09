@@ -35,7 +35,7 @@ export const createFog = (color: number | string, near: number, far: number) => 
 };
 
 // Helper pour texture canvas
-export const createCanvasTexture = (canvas: HTMLCanvasElement, options: Partial<THREE.CanvasTextureParameters> = {}) => {
+export const createCanvasTexture = (canvas: HTMLCanvasElement, options: any = {}) => {
   const texture = new THREE.CanvasTexture(canvas);
   Object.assign(texture, options);
   return texture;

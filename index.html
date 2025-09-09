@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Interactive 3D Network Visualization with smooth JSON state animations" />
     <title>Network Visualization App</title>
@@ -11,7 +10,363 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- Network 3D Background Container -->
+    <div id="network-background">
+      <div class="network-visualization-container position-fixed top-0 start-0 bottom-0 end-0 w-100 h-100" style="z-index: -10;">
+        <div id="network-background-gradient" class="position-absolute top-0 start-0 bottom-0 end-0 bg-gradient" style="background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 50%, #e0e7ff 100%); opacity: 0.8;"></div>
+        <!-- React Network Visualization will render here -->
+        <div id="network-visualization-root"></div>
+      </div>
+    </div>
+
+    <!-- Test Loader Container -->
+    <div id="test-loader-container" class="position-fixed top-0 start-0 mt-3 ms-3" style="z-index: 50;"></div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="position-relative" style="z-index: 10;">
+      <!-- Hero section -->
+      <section 
+        id="hero-section" 
+        class="min-vh-100 d-flex align-items-center justify-content-center"
+        data-scroll-camera="true"
+        data-scroll-start="top center"
+        data-scroll-end="bottom center"
+        data-scroll-markers="false"
+        data-on-enter-zoom="1"
+        data-on-enter-position-x="5"
+        data-on-enter-position-y="0.5"
+        data-on-enter-position-z="30"
+        data-on-enter-target-x="5"
+        data-on-enter-target-y="0"
+        data-on-enter-target-z="0"
+        data-on-enter-back-zoom="1"
+        data-on-enter-back-position-x="5"
+        data-on-enter-back-position-y="0.5"
+        data-on-enter-back-position-z="30"
+        data-on-enter-back-target-x="5"
+        data-on-enter-back-target-y="0"
+        data-on-enter-back-target-z="0"
+      >
+        <div id="hero-container" class="text-center container" style="max-width: 900px;">
+          <div id="hero-content" class="rounded-4 p-5">
+            <h1 class="display-1 fw-bold mb-4 text-dark">
+              Network Visualization
+            </h1>
+            <p class="fs-5 text-secondary mb-3">
+              Explore complex network structures in an immersive 3D environment 
+              with automatic camera transitions, flat design rendering, and smooth JSON state animations
+            </p>
+            <p class="fs-6 text-muted mb-3">
+              Current network: <span class="fw-semibold text-dark" id="current-network-name">Loading...</span> 
+              (<span id="current-network-nodes">0</span> nodes)
+            </p>
+            <p class="small text-info mb-4">
+              💫 Try the animation test loader to see smooth transitions between network states
+            </p>
+            <div id="hero-actions" class="d-flex justify-content-center gap-3">
+              <button 
+                onclick="setCameraControls(1, [20, 5, 20], [0, 0, 0])"
+                class="btn btn-primary btn-lg px-4 fw-semibold"
+              >
+                Zoom In View
+              </button>
+              <button 
+                onclick="setCameraControls(1, [0, 0.5, 10], [0, 0, 0])"
+                class="btn btn-outline-secondary btn-lg px-4 fw-semibold"
+              >
+                Default View
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About section -->
+      <section 
+        id="about-section" 
+        class="min-vh-100 d-flex align-items-center justify-content-center py-5"
+        data-scroll-camera="true"
+        data-scroll-start="top 80%"
+        data-scroll-end="bottom 20%"
+        data-scroll-markers="false"
+        data-on-enter-zoom="1"
+        data-on-enter-position-x="5"
+        data-on-enter-position-y="2"
+        data-on-enter-position-z="20"
+        data-on-enter-target-x="0"
+        data-on-enter-target-y="0"
+        data-on-enter-target-z="0"
+        data-on-leave-zoom="1"
+        data-on-leave-position-x="0"
+        data-on-leave-position-y="0.5"
+        data-on-leave-position-z="30"
+      >
+        <div id="about-container" class="container" style="max-width: 1200px;">
+          <div id="about-content" class="rounded-4 p-5">
+            <h2 class="display-4 fw-bold mb-5 text-center text-dark">
+              Interactive Network Analysis with Smooth Animations
+            </h2>
+
+            <div class="row align-items-center g-5">
+              <div class="col-lg-6">
+                <h3 class="h3 fw-semibold mb-4 text-dark">
+                  Visualize Complex Relationships
+                </h3>
+                <p class="fs-6 text-secondary mb-4">
+                  Our network visualization allows you to explore complex data relationships 
+                  in an intuitive and engaging way. Each node represents a data point, 
+                  with connections showing relationships and dependencies.
+                </p>
+                <p class="fs-6 text-secondary mb-4">
+                  The highlighted orange nodes draw attention to key elements, while the 
+                  varying sizes of blue nodes indicate different levels of importance or 
+                  connectivity within the network. Clean flat design provides optimal 
+                  performance and clarity.
+                </p>
+                <div class="vstack gap-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary rounded-circle" style="width: 16px; height: 16px;"></div>
+                    <span class="text-body">
+                      Network nodes with varying importance
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-warning rounded-circle" style="width: 16px; height: 16px;"></div>
+                    <span class="text-body">
+                      Highlighted key elements
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary" style="width: 32px; height: 2px;"></div>
+                    <span class="text-body">
+                      Connection relationships
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle animate-pulse" style="width: 16px; height: 16px; background: linear-gradient(to right, #3b82f6, #f59e0b);"></div>
+                    <span class="text-body">
+                      Smooth JSON state transitions
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 d-flex justify-content-center">
+                <img
+                  src="images/default.png"
+                  alt="Network structure reference"
+                  class="img-fluid rounded-3"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features section -->
+      <section 
+        id="features-section" 
+        class="min-vh-100 d-flex align-items-center justify-content-center py-5"
+        data-scroll-camera="true"
+        data-scroll-start="top 80%"
+        data-scroll-end="bottom 20%"
+        data-scroll-markers="false"
+        data-on-enter-zoom="1"
+        data-on-enter-position-x="12"
+        data-on-enter-position-y="3"
+        data-on-enter-position-z="10"
+        data-on-enter-target-x="0"
+        data-on-enter-target-y="0"
+        data-on-enter-target-z="0"
+        data-on-leave-zoom="1"
+        data-on-leave-position-x="5"
+        data-on-leave-position-y="2"
+        data-on-leave-position-z="20"
+      >
+        <div class="container" style="max-width: 1200px;">
+          <div class="rounded-4 p-5">
+            <h2 class="display-4 fw-bold mb-5 text-center text-dark">
+              Powerful Features
+            </h2>
+
+            <div class="row g-4">
+              <div class="col-md-4">
+                <article class="text-center p-4">
+                  <div class="d-flex align-items-center justify-content-center mx-auto mb-4 bg-primary bg-opacity-10 rounded-circle" style="width: 64px; height: 64px;">
+                    <div class="bg-primary rounded-circle" style="width: 32px; height: 32px;"></div>
+                  </div>
+                  <h3 class="h5 fw-semibold mb-3 text-dark">
+                    Optimized Performance
+                  </h3>
+                  <p class="text-secondary">
+                    Clean flat design rendering optimized for performance 
+                    and clarity without sacrificing visual impact.
+                  </p>
+                </article>
+              </div>
+
+              <div class="col-md-4">
+                <article class="text-center p-4">
+                  <div class="d-flex align-items-center justify-content-center mx-auto mb-4 bg-warning bg-opacity-10 rounded-circle" style="width: 64px; height: 64px;">
+                    <div class="bg-warning rounded-circle" style="width: 32px; height: 32px;"></div>
+                  </div>
+                  <h3 class="h5 fw-semibold mb-3 text-dark">
+                    Smooth State Transitions
+                  </h3>
+                  <p class="text-secondary">
+                    Beautiful animations when loading new JSON configurations 
+                    with scale effects for appearing/disappearing nodes and smooth movement.
+                  </p>
+                </article>
+              </div>
+
+              <div class="col-md-4">
+                <article class="text-center p-4">
+                  <div class="d-flex align-items-center justify-content-center mx-auto mb-4 bg-success bg-opacity-10 rounded-circle" style="width: 64px; height: 64px;">
+                    <div class="bg-success rounded-circle" style="width: 32px; height: 32px;"></div>
+                  </div>
+                  <h3 class="h5 fw-semibold mb-3 text-dark">
+                    JSON Data Integration
+                  </h3>
+                  <p class="text-secondary">
+                    Seamless integration with server-side data through 
+                    our JSON API for dynamic network configurations.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact section -->
+      <section 
+        id="contact-section" 
+        class="min-vh-100 d-flex align-items-center justify-content-center py-5"
+        data-scroll-camera="true"
+        data-scroll-start="top 80%"
+        data-scroll-end="bottom 20%"
+        data-scroll-markers="false"
+        data-on-enter-zoom="1"
+        data-on-enter-position-x="0"
+        data-on-enter-position-y="18"
+        data-on-enter-position-z="0"
+        data-on-enter-target-x="0"
+        data-on-enter-target-y="0"
+        data-on-enter-target-z="0"
+        data-on-leave-zoom="1"
+        data-on-leave-position-x="12"
+        data-on-leave-position-y="3"
+        data-on-leave-position-z="30"
+      >
+        <div class="container" style="max-width: 900px;">
+          <div class="rounded-4 p-5 text-center">
+            <h2 class="display-4 fw-bold mb-4 text-dark">
+              Ready to Explore?
+            </h2>
+            <p class="fs-5 text-secondary mb-4">
+              Experience the power of optimized network visualization 
+              with automatic scroll-based camera control, clean flat design, 
+              and smooth JSON state transitions.
+            </p>
+            
+            <div class="bg-info bg-opacity-10 rounded-4 p-4 mb-4">
+              <h3 class="fs-6 fw-semibold mb-3 text-info">
+                🎮 Try the Animation System
+              </h3>
+              <p class="text-info mb-3">
+                Use the test loader in the top-left corner to experience:
+              </p>
+              <div class="row g-3 text-sm text-info">
+                <div class="col-md-6">📦 Scale animations for new/removed nodes</div>
+                <div class="col-md-6">🔄 Smooth movement transitions</div>
+                <div class="col-md-6">⚡ GSAP-powered easing effects</div>
+                <div class="col-md-6">🔗 Animated connection lines</div>
+              </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+              <div class="col-md-6">
+                <div class="p-4 rounded-3">
+                  <h3 class="fs-6 fw-semibold mb-3 text-dark">
+                    For Researchers
+                  </h3>
+                  <p class="text-secondary">
+                    Visualize complex research data with optimized performance 
+                    and smooth transitions between different network states.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-4 rounded-3">
+                  <h3 class="fs-6 fw-semibold mb-3 text-dark">
+                    For Businesses
+                  </h3>
+                  <p class="text-secondary">
+                    Present organizational networks with professional flat design 
+                    and engaging animations when updating data configurations.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mb-4">
+              <button 
+                onclick="setCameraControls(1, [5, 15, 5], [0, 0, 0])"
+                class="btn btn-outline-secondary px-4 py-2 fw-semibold"
+              >
+                Top View
+              </button>
+              <button 
+                onclick="setCameraControls(1, [25, 2, 25], [0, 0, 0])"
+                class="btn btn-outline-success px-4 py-2 fw-semibold"
+              >
+                Wide View
+              </button>
+              <button 
+                onclick="setCameraControls(3, [8, 3, 0], [0, 0, 0])"
+                class="btn btn-outline-danger px-4 py-2 fw-semibold"
+              >
+                Side View
+              </button>
+            </div>
+            
+            <button 
+              onclick="setCameraControls(1, [0, 0.5, 10], [0, 0, 0])"
+              class="btn btn-primary btn-lg px-5 py-3 fw-semibold"
+            >
+              Reset to Default
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- React App Root (pour les composants interactifs) -->
     <div id="root"></div>
-    <script type="module" src="/main.tsx"></script>
+
+    <!-- Camera Controls Script -->
+    <script>
+      // Global camera control function
+      function setCameraControls(zoom, position, target = [0, 0, 0]) {
+        const container = document.querySelector('.network-visualization-container[data-main-visualization="true"]') || document.querySelector('.network-visualization-container');
+        const element = container || document.body;
+        
+        element.dataset.cameraZoom = zoom.toString();
+        element.dataset.cameraPositionX = position[0].toString();
+        element.dataset.cameraPositionY = position[1].toString();
+        element.dataset.cameraPositionZ = position[2].toString();
+        element.dataset.cameraTargetX = target[0].toString();
+        element.dataset.cameraTargetY = target[1].toString();
+        element.dataset.cameraTargetZ = target[2].toString();
+      }
+
+      // Initialize with default camera position
+      document.addEventListener('DOMContentLoaded', function() {
+        setCameraControls(1, [0, 0.5, 30], [0, 0, 0]);
+      });
+    </script>
+
+    <!-- Webpack will automatically inject the weasteam3d.js script here -->
   </body>
 </html>

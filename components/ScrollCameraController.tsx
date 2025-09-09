@@ -167,7 +167,7 @@ export const useScrollCameraController = (
       if (elements.length === 0) {
         retryCount++;
         if (retryCount < maxRetries) {
-          retryTimeoutRef.current = setTimeout(initScrollCameraController, retryDelay);
+          retryTimeoutRef.current = window.setTimeout(initScrollCameraController, retryDelay);
           return;
         } else {
           return;
