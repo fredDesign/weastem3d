@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Test Service - Exemple d'utilisation classique</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Network Test Service - Exemple d'utilisation</h1>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Contrôles de Configuration du Réseau</h5>
+                        <p class="mb-0 text-muted">Utilisation du NetworkTestService avec des triggers de click classiques</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- État de chargement -->
+                        <div id="loading-indicator" class="alert alert-info" style="display: none;">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                <span id="loading-text">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Configuration actuelle -->
+                        <div class="alert alert-secondary">
+                            <strong>Configuration actuelle :</strong> <span id="current-config-name">default</span>
+                        </div>
+                        
+                        <!-- Boutons de configuration -->
+                        <h6>Configurations prédéfinies :</h6>
+                        <div class="mb-3">
+                            <button id="load-default-config" class="btn btn-outline-primary me-2 mb-2" data-config="default">
+                                🏠 Default
+                            </button>
+                            <button id="load-simple-config" class="btn btn-outline-primary me-2 mb-2" data-config="simple">
+                                🔹 Simple
+                            </button>
+                            <button id="load-expanded-config" class="btn btn-outline-primary me-2 mb-2" data-config="expanded">
+                                📈 Expanded
+                            </button>
+                            <button id="load-moved-config" class="btn btn-outline-primary me-2 mb-2" data-config="moved">
+                                🔄 Moved
+                            </button>
+                            <button id="load-complex-config" class="btn btn-outline-primary me-2 mb-2" data-config="complex">
+                                🌐 Complex
+                            </button>
+                        </div>
+                        
+                        <hr>
+                        
+                        <!-- Actions d'import/export -->
+                        <h6>Import / Export :</h6>
+                        <div class="mb-3">
+                            <button id="export-config" class="btn btn-secondary me-2 mb-2">
+                                💾 Exporter la configuration
+                            </button>
+                            <input type="file" id="import-config-file" class="form-control mb-2" accept=".json" 
+                                   style="width: auto; display: inline-block;">
+                        </div>
+                        
+                        <hr>
+                        
+                        <!-- Boutons avec onclick inline -->
+                        <h6>Utilisation avec onclick inline (exemple) :</h6>
+                        <div class="mb-3">
+                            <button onclick="loadNetworkConfiguration('simple')" class="btn btn-outline-success me-2 mb-2">
+                                Inline: Simple
+                            </button>
+                            <button onclick="window.networkTestService.loadConfiguration('expanded')" class="btn btn-outline-success me-2 mb-2">
+                                Inline: Expanded
+                            </button>
+                        </div>
+                        
+                        <hr>
+                        
+                        <!-- Séquence automatique -->
+                        <h6>Test automatique :</h6>
+                        <button id="run-sequence" class="btn btn-warning">
+                            🎬 Lancer une séquence de configurations
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Console de Logs</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="console-logs" class="bg-dark text-light p-3 rounded" style="height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.8rem;">
+                            <!-- Les logs apparaîtront ici -->
+                        </div>
+                        <button id="clear-logs" class="btn btn-outline-secondary btn-sm mt-2">
+                            Clear Logs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informations d'utilisation -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6>Guide d'utilisation</h6>
+            </div>
+            <div class="card-body">
+                <h6>Méthodes disponibles dans le scope global :</h6>
+                <pre class="bg-light p-3 rounded"><code>// Service complet
+window.networkTestService.loadConfiguration('simple')
+window.networkTestService.exportConfiguration()
+window.networkTestService.loadFromFile(file)
+
+// Fonction simplifiée
+window.loadNetworkConfiguration('expanded')
+
+// Gestionnaires d'événements
+button.addEventListener('click', networkTestService.createClickHandler('complex'))
+fileInput.addEventListener('change', networkTestService.createFileHandler())</code></pre>
+                
+                <h6 class="mt-3">Configurations disponibles :</h6>
+                <ul>
+                    <li><code>'default'</code> - Configuration par défaut du système</li>
+                    <li><code>'simple'</code> - Réseau simple avec 3 nœuds</li>
+                    <li><code>'expanded'</code> - Réseau étendu avec 6 nœuds</li>
+                    <li><code>'moved'</code> - Réseau avec nœuds déplacés</li>
+                    <li><code>'complex'</code> - Réseau complexe avec 11 nœuds</li>
+                    <li><code>'custom'</code> - Configuration importée depuis un fichier JSON</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script principal -->
+    <script>
+        // Ce script simule l'utilisation du NetworkTestService
+        // En réalité, vous devrez importer weasteam3d.js qui contient le service
+        
+        let currentConfig = 'default';
+        let isLoading = false;
+        
+        // Simulation du service pour la démonstration
+        const mockNetworkTestService = {
+            loadConfiguration: async function(configName) {
+                logToConsole(`🔄 Loading configuration: ${configName}`);
+                setLoadingState(true, configName);
+                
+                // Simuler un délai de chargement
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                currentConfig = configName;
+                updateCurrentConfigDisplay();
+                setLoadingState(false, configName);
+                logToConsole(`✅ Configuration loaded: ${configName}`);
+                return true;
+            },
+            
+            exportConfiguration: function() {
+                logToConsole(`💾 Exporting configuration: ${currentConfig}`);
+                
+                // Créer un fichier JSON de démonstration
+                const demoConfig = {
+                    version: "1.0.0",
+                    metadata: { name: `${currentConfig} Network` },
+                    nodes: [{ id: 0, position: [0,0,0], radius: 0.5, color: "#0E48A9" }]
+                };
+                
+                const blob = new Blob([JSON.stringify(demoConfig, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `network-config-${currentConfig}-demo.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                logToConsole(`✅ Configuration exported as: network-config-${currentConfig}-demo.json`);
+            },
+            
+            loadFromFile: async function(file) {
+                if (!file) return false;
+                
+                logToConsole(`📁 Loading file: ${file.name}`);
+                setLoadingState(true, 'custom');
+                
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const content = e.target.result;
+                            JSON.parse(content); // Valider le JSON
+                            
+                            await new Promise(r => setTimeout(r, 800)); // Simuler le traitement
+                            
+                            currentConfig = 'custom';
+                            updateCurrentConfigDisplay();
+                            setLoadingState(false, 'custom');
+                            logToConsole(`✅ Custom configuration loaded from: ${file.name}`);
+                            resolve(true);
+                        } catch (error) {
+                            setLoadingState(false, 'custom');
+                            logToConsole(`❌ Error loading file: ${error.message}`);
+                            alert(`Error loading JSON: ${error.message}`);
+                            resolve(false);
+                        }
+                    };
+                    reader.readAsText(file);
+                });
+            },
+            
+            createClickHandler: function(configName) {
+                return () => this.loadConfiguration(configName);
+            },
+            
+            createFileHandler: function() {
+                return (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.loadFromFile(file);
+                        event.target.value = '';
+                    }
+                };
+            }
+        };
+        
+        // Fonctions utilitaires
+        function logToConsole(message) {
+            const consoleDiv = document.getElementById('console-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            consoleDiv.appendChild(logEntry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        function setLoadingState(loading, configName) {
+            isLoading = loading;
+            const indicator = document.getElementById('loading-indicator');
+            const loadingText = document.getElementById('loading-text');
+            const buttons = document.querySelectorAll('button[data-config], #export-config, #run-sequence');
+            
+            indicator.style.display = loading ? 'block' : 'none';
+            loadingText.textContent = loading ? `Loading ${configName}...` : '';
+            
+            buttons.forEach(btn => btn.disabled = loading);
+        }
+        
+        function updateCurrentConfigDisplay() {
+            document.getElementById('current-config-name').textContent = currentConfig;
+        }
+        
+        // Configuration des gestionnaires d'événements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Boutons de configuration
+            document.getElementById('load-default-config').addEventListener('click', 
+                () => mockNetworkTestService.loadConfiguration('default'));
+            document.getElementById('load-simple-config').addEventListener('click', 
+                () => mockNetworkTestService.loadConfiguration('simple'));
+            document.getElementById('load-expanded-config').addEventListener('click', 
+                () => mockNetworkTestService.loadConfiguration('expanded'));
+            document.getElementById('load-moved-config').addEventListener('click', 
+                () => mockNetworkTestService.loadConfiguration('moved'));
+            document.getElementById('load-complex-config').addEventListener('click', 
+                () => mockNetworkTestService.loadConfiguration('complex'));
+            
+            // Export
+            document.getElementById('export-config').addEventListener('click', 
+                () => mockNetworkTestService.exportConfiguration());
+            
+            // Import
+            document.getElementById('import-config-file').addEventListener('change', 
+                mockNetworkTestService.createFileHandler());
+            
+            // Séquence automatique
+            document.getElementById('run-sequence').addEventListener('click', async function() {
+                logToConsole('🎬 Starting automatic sequence...');
+                const configs = ['simple', 'expanded', 'moved', 'complex', 'default'];
+                
+                for (const config of configs) {
+                    await mockNetworkTestService.loadConfiguration(config);
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                }
+                
+                logToConsole('🎉 Sequence completed!');
+            });
+            
+            // Clear logs
+            document.getElementById('clear-logs').addEventListener('click', function() {
+                document.getElementById('console-logs').innerHTML = '';
+            });
+            
+            // Message de bienvenue
+            logToConsole('🚀 Network Test Service Demo initialized');
+            logToConsole('📝 This is a demonstration. In production, import weasteam3d.js');
+        });
+        
+        // Fonctions globales pour les onclick inline
+        window.loadNetworkConfiguration = (configName) => {
+            mockNetworkTestService.loadConfiguration(configName);
+        };
+        
+        window.networkTestService = mockNetworkTestService;
+    </script>
+</body>
+</html>

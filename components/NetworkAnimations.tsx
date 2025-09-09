@@ -32,18 +32,20 @@ export interface SinusoidalParams {
   amplitudeY: number;
   amplitudeZ: number;
 }
+export const dist: number = 0.05;
+export const speed: number = 1;
 
 // Generate sinusoidal parameters for a node
 export const generateSinusoidalParams = (): SinusoidalParams => ({
-  x: Math.random() * Math.PI * 2,
-  y: Math.random() * Math.PI * 2,
-  z: Math.random() * Math.PI * 2,
-  speedX: 0.5 + Math.random() * 0.5,
-  speedY: 0.3 + Math.random() * 0.4,
-  speedZ: 0.4 + Math.random() * 0.3,
-  amplitudeX: 0.1 + Math.random() * 0.15,
-  amplitudeY: 0.1 + Math.random() * 0.15,
-  amplitudeZ: 0.08 + Math.random() * 0.12,
+  x: Math.random() * Math.PI * 1,
+  y: Math.random() * Math.PI * 1,
+  z: Math.random() * Math.PI * 1,
+  speedX: 0.5 + Math.random() * speed,
+  speedY: 0.3 + Math.random() * speed,
+  speedZ: 0.4 + Math.random() * speed,
+  amplitudeX: 0.1 + Math.random() * dist,
+  amplitudeY: 0.1 + Math.random() * dist,
+  amplitudeZ: 0.08 + Math.random() * dist,
 });
 
 // Calculate sinusoidal offset

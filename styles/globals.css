@@ -143,3 +143,7 @@ html {
 .network-loaded {
   opacity: 1;
 }
+#network-visualization-root {
+  inset: 0;
+  position: absolute;
+  z-index: 0;}
